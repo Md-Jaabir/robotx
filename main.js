@@ -13,9 +13,6 @@ let joinAndDisplayLocalStream = async () => {
     client.on('user-published', handleUserJoined)
     
     client.on('user-left', handleUserLeft)
-    if(isRobot){
-        localStream.switchDevice("video", "<deviceid>", console.log,console.log);
-    }
     let UID = await client.join(APP_ID, CHANNEL, TOKEN, null)
 
     localTracks = await AgoraRTC.createMicrophoneAndCameraTracks() 
