@@ -1,6 +1,7 @@
 const APP_ID = "0fbf6fd5beda4795abab317898ffdba5"
 const TOKEN = "007eJxTYLgtnmggGXCq45xu11+WOOV5sxRPK7Xe0LqpvrKwQcw6fasCg0FaUppZWoppUmpKoom5pWliUmKSsaG5haVFWlpKUqLpw/2cqQ2BjAxh+/VZGRkgEMRnYchNzMxjYAAAB2Ue7A=="
 const CHANNEL = "main"
+let isRobot=confirm("Are you the robot");
 
 const client = AgoraRTC.createClient({mode:'rtc', codec:'vp8'})
 
@@ -12,7 +13,9 @@ let joinAndDisplayLocalStream = async () => {
     client.on('user-published', handleUserJoined)
     
     client.on('user-left', handleUserLeft)
-    
+    if(isRobot){
+        localStream.switchDevice("video", "<deviceid>", console.log,console.log);
+    }
     let UID = await client.join(APP_ID, CHANNEL, TOKEN, null)
 
     localTracks = await AgoraRTC.createMicrophoneAndCameraTracks() 
@@ -72,31 +75,6 @@ let leaveAndRemoveLocalStream = async () => {
     document.getElementById('video-streams').innerHTML = ''
 }
 
-let toggleMic = async (e) => {
-    if (localTracks[0].muted){
-        await localTracks[0].setMuted(false)
-        e.target.innerText = 'Mic on'
-        e.target.style.backgroundColor = 'cadetblue'
-    }else{
-        await localTracks[0].setMuted(true)
-        e.target.innerText = 'Mic off'
-        e.target.style.backgroundColor = '#EE4B2B'
-    }
-}
 
-let toggleCamera = async (e) => {
-    if(localTracks[1].muted){
-        await localTracks[1].setMuted(false)
-        e.target.innerText = 'Camera on'
-        e.target.style.backgroundColor = 'cadetblue'
-    }else{
-        await localTracks[1].setMuted(true)
-        e.target.innerText = 'Camera off'
-        e.target.style.backgroundColor = '#EE4B2B'
-    }
-}
 
 document.getElementById('join-btn').addEventListener('click', joinStream)
-document.getElementById('leave-btn').addEventListener('click', leaveAndRemoveLocalStream)
-document.getElementById('mic-btn').addEventListener('click', toggleMic)
-document.getElementById('camera-btn').addEventListener('click', toggleCamera)
